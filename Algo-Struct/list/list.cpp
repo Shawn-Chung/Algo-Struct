@@ -1,59 +1,57 @@
 
 #include <malloc.h>
 #include <iostream>
+#include "gloabl.h"
 #include "list.h"
-
+#include "easylogging++.h"
 
 using namespace std;
 using namespace lt;
 
-int lt::random(int start, int end)
-{
-    return start + (end - start)*rand() / RAND_MAX;
-}
+
 
 int lt::TestList()
 {
-    cout << "...begin test CList..." <<endl;
+    LOG(INFO) << "...begin test CList...";
 
     CList *slist = new CSlist();
 
-    cout << "the list size is: " << slist->count() << endl;
-    cout << "begin build the list, give a num: ";
+    LOG(INFO) << "the list size is: " << slist->count() ;
+    LOG(INFO) << "begin build the list, give the size of list: ";
     int count = 0;
     cin >> count;
     for (int i = 0; i < count; ++i)
     {
         slist->push_back(random(1, count * 100));
     }
-    cout << "the list size is: " << slist->count() << endl;
+    LOG(INFO) << "the list size is: " << slist->count() ;
     slist->output();
 
-    cout << "insert element...put in the pos and value:";
+    LOG(INFO) << "insert element...put in the pos and value:";
     int pos = 0;
     int val = 0;
     cin >> pos >> val;
 
     slist->insert(pos, val);
-    cout << "the list size is: " << slist->count() << endl;
+    LOG(INFO) << "the list size is: " << slist->count();
     slist->output();
 
-    cout << "push back element...put in the value:";
+    LOG(INFO) << "push back element...put in the value:";
     cin >> val;
     slist->push_back(val);
-    cout << "the list size is: " << slist->count() << endl;
+    LOG(INFO) << "the list size is: " << slist->count() ;
     slist->output();
 
-    cout << "push front element...put in the value:";
+    LOG(INFO) << "push front element...put in the value:";
     cin >> val;
     slist->push_front(val);
-    cout << "the list size is: " << slist->count() << endl;
+    LOG(INFO) << "the list size is: " << slist->count() ;
     slist->output();
 
-    cout << "remove element...put in the pos:";
+    LOG(INFO) << "remove element...put in the pos:";
     cin >> pos;
     slist->remove(pos);
-    cout << "the list size is: " << slist->count() << endl;
+    LOG(INFO) << "the list size is: " << slist->count() ;
     slist->output();
 
 
@@ -91,14 +89,14 @@ int CSlist::count()
 void CSlist::output()
 {
 	TSlist *cur = m_pHeader->next;
+    QVector<ElmType> data;
 
 	while (NULL != cur)
 	{
-		cout << cur->data<<" ";
+        data.append(cur->data);
 		cur = cur->next;
 	}
-
-	cout << endl;
+    LOG(INFO) << data;
 }
 
 void CSlist::push_back(ElmType val)
