@@ -8,7 +8,7 @@ using namespace st;
 int st::sortTest()
 {
     //根据需要的算法选择构建相应的类
-    CSort *sort = new BubbleSort(15);
+    CSort *sort = new CSelectSort(15);
 //    sort->init();
 
     QList<int> result;
@@ -18,6 +18,8 @@ int st::sortTest()
     sort->exec();
     sort->getData(result);
     LOG(INFO) << "The result  data:" << result;
+
+    return 0;
 }
 
 int CSort::init()
@@ -26,6 +28,8 @@ int CSort::init()
     {
         m_lstData.append(random(1, m_iSize * 100));
     }
+
+    return 0;
 }
 
 int CInsortSort::exec()
@@ -57,6 +61,8 @@ int CInsortSort::exec()
         m_lstData.push_back(data[i]);
     }
     delete data;
+
+    return 0;
 }
 
 
@@ -74,6 +80,8 @@ int BubbleSort::sort_normal(int *pData, int iSize)
             }
         }
     }
+
+    return 0;
 }
 
 int BubbleSort::sort_optimize(int *pData, int iSize)
@@ -97,6 +105,8 @@ int BubbleSort::sort_optimize(int *pData, int iSize)
             }
         }
     }
+
+    return 0;
 }
 
 int BubbleSort::exec()
@@ -119,4 +129,46 @@ int BubbleSort::exec()
         m_lstData.push_back(data[i]);
     }
     delete data;
+
+    return 0;
+}
+
+int CSelectSort::exec()
+{
+    //输入数据处理
+    int *data = new int(getSize());
+    for(int i=0; i<getSize(); i++)
+    {
+        data[i] = m_lstData.value(i);
+    }
+
+    //具体的排序算法
+    for(int i=0; i<getSize()-1; i++)
+    {
+        int index = i;
+        for(int j=i+1; j<getSize(); j++)
+        {
+            if(data[j]<data[index])
+            {
+                index = j;
+            }
+        }
+
+        if(index != i)
+        {
+            int tmp = data[i];
+            data[i] = data[index];
+            data[index] = tmp;
+        }
+    }
+
+    //输出数据处理
+    m_lstData.clear();
+    for(int i=0; i<getSize(); i++)
+    {
+        m_lstData.push_back(data[i]);
+    }
+    delete data;
+
+    return 0;
 }
