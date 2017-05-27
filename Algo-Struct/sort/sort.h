@@ -35,6 +35,18 @@ public:
 
     virtual int exec();
 };
+
+//希尔排序
+/*分组 进行 插入排序*/
+class CShellSort: public CSort
+{
+public:
+    CShellSort(int count):CSort(count) {}
+    CShellSort(QList<int> initData):CSort(initData){}
+
+    virtual int exec();
+};
+
 //冒泡排序
 /*从第 0 个元素开始，往后轮训，相邻的两两比较，如果前面的比后面的大，则交换位置，
  * 一次遍历则吧数组中最大的元素交换到了最后的位置*/
@@ -63,6 +75,20 @@ public:
     virtual int exec();
 };
 
+//快速排序
+/*递归地将数组分为左右两部分，使其左边部分的全部元素都小于右边的全部元素*/
+class CQuickSort: public CSort
+{
+public:
+    CQuickSort(int count):CSort(count) {}
+    CQuickSort(QList<int> initData):CSort(initData) {}
+
+    virtual int exec();
+
+private:
+    int partition(int *pData, int first, int end);
+    int sort(int *pData, int first, int end);
+};
 
 
 

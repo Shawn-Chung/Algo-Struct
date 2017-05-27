@@ -8,7 +8,7 @@ using namespace st;
 int st::sortTest()
 {
     //根据需要的算法选择构建相应的类
-    CSort *sort = new CSelectSort(15);
+    CSort *sort = new CQuickSort(100);
 //    sort->init();
 
     QList<int> result;
@@ -65,9 +65,50 @@ int CInsortSort::exec()
     return 0;
 }
 
+int CShellSort::exec()
+{
+    //输入数据处理
+    int *data = new int(getSize());
+    for(int i=0; i<getSize(); i++)
+    {
+        data[i] = m_lstData.value(i);
+    }
+
+    //具体的排序算法
+    for(int d=getSize()/2; d>=1; d/=2)
+    {
+        for(int i=d; i<getSize(); i++)
+        {
+            int tmp = data[i];
+            int j = i-d;
+            for(; j>0 && data[j]>tmp; j-=d)
+            {
+                data[j+d] = data[j];
+            }
+            data[j+d] = tmp;
+        }
+    }
+
+    //输出数据处理
+    m_lstData.clear();
+    for(int i=0; i<getSize(); i++)
+    {
+        m_lstData.push_back(data[i]);
+    }
+    delete data;
+
+    return 0;
+}
+
 
 int BubbleSort::sort_normal(int *pData, int iSize)
 {
+    if(!pData)
+    {
+        LOG(ERROR)<< "invalid pointer";
+        return -1;
+    }
+
     for(int j=iSize-1; j>0; j--)
     {
         for(int i=0; i<j; i++)
@@ -86,6 +127,12 @@ int BubbleSort::sort_normal(int *pData, int iSize)
 
 int BubbleSort::sort_optimize(int *pData, int iSize)
 {
+    if(!pData)
+    {
+        LOG(ERROR)<< "invalid pointer";
+        return -1;
+    }
+
     //用于指示是否需要排序
     int iExchange = getSize()-1;
     //如果此次遍历未进行交换(iExchange)，则直接退出，排序完成
@@ -161,6 +208,83 @@ int CSelectSort::exec()
             data[index] = tmp;
         }
     }
+
+    //输出数据处理
+    m_lstData.clear();
+    for(int i=0; i<getSize(); i++)
+    {
+        m_lstData.push_back(data[i]);
+    }
+    delete data;
+
+    return 0;
+}
+
+int CQuickSort::partition(int *pData, int first, int end)
+{
+    if(!pData)
+    {
+        LOG(ERROR)<< "invalid pointer";
+        return -1;
+    }
+    int i = first;
+    int j = end;
+    while(i<j)
+    {
+        while((i<j) && pData[j]>=pData[i])
+        {
+            j--;
+        }
+        if(i<j)
+        {
+            int tmp = pData[i];
+            pData[i] = pData[j];
+            pData[j] = tmp;
+            i++;
+        }
+
+        while ((i<j) && pData[j]>=pData[i])
+        {
+            i++;
+        }
+        if(i<j)
+        {
+            int tmp = pData[i];
+            pData[i] = pData[j];
+            pData[j] = tmp;
+            j--;
+        }
+    }
+    return i;
+}
+
+int CQuickSort::sort(int *pData, int first, int end)
+{
+    if(!pData)
+    {
+        LOG(ERROR)<< "invalid pointer";
+        return -1;
+    }
+    if(first < end)
+    {
+        int index = partition(pData, first, end);
+        sort(pData, first, index);
+        sort(pData, index+1, end);
+    }
+    return 0;
+}
+
+int CQuickSort::exec()
+{
+    //输入数据处理
+    int *data = new int(getSize());
+    for(int i=0; i<getSize(); i++)
+    {
+        data[i] = m_lstData.value(i);
+    }
+
+    //具体的排序算法
+    sort(data, 0, getSize()-1);
 
     //输出数据处理
     m_lstData.clear();
