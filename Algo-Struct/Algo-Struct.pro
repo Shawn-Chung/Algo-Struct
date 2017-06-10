@@ -20,10 +20,12 @@ SOURCES += main.cpp \
     list/list.cpp \
     sort/sort.cpp \
     easylogging++.cc \
-    gloabl.cpp
+    gloabl.cpp \
+    examples/two_sum.cpp
 
 HEADERS += \
     list/list.h \
     sort/sort.h \
     easylogging++.h \
-    gloabl.h
+    gloabl.h \
+    examples/two_sum.h

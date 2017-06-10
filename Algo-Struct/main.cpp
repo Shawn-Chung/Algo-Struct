@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include "list/list.h"
 #include "sort/sort.h"
+#include "examples/two_sum.h"
 
 #include "easylogging++.h"
 INITIALIZE_EASYLOGGINGPP
@@ -15,6 +16,9 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
 //    lt::TestList();
-    st::sortTest();
+//    st::sortTest();
+    ep::test_two_sum();
+
+
     return a.exec();
 }
