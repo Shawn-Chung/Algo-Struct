@@ -2,6 +2,7 @@
 #include "list/list.h"
 #include "sort/sort.h"
 #include "examples/two_sum.h"
+#include "CAVLTree/CAVLTree.h"
 
 #include "easylogging++.h"
 INITIALIZE_EASYLOGGINGPP
@@ -17,7 +18,8 @@ int main(int argc, char *argv[])
 
 //    lt::TestList();
 //    st::sortTest();
-    ep::test_two_sum();
+//    ep::test_two_sum();
+//    tr::AVLtest();
 
 
     return a.exec();

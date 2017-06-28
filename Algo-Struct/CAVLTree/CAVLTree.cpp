@@ -3,6 +3,35 @@
 
 using namespace tr;
 
+
+int tr::AVLtest()
+{
+    int arr[]= {3,2,1,4,5,6,7,16,15,14,13,12,11,10,8,9};
+
+    CAVLTree *tree = new CAVLTree();
+    LOG(INFO) << "the height of the tree is: " <<tree->height() ;
+
+    for(int i=0; i<12; i++)
+    {
+        tree->insert(arr[i]);
+        LOG(INFO) << "the height of the tree is: " <<tree->height() ;
+    }
+    tree->preorder();
+
+    tree->deleteKey(4);
+    tree->deleteKey(3);
+    tree->deleteKey(1);
+    tree->deleteKey(12);
+    tree->deleteKey(14);
+    tree->preorder();
+}
+
+
+
+
+
+
+
 CAVLTree::CAVLTree():
     m_tTree(NULL)
 {
@@ -31,6 +60,7 @@ void CAVLTree::preorder(AVLTree tree)
     }
 
     LOG(INFO) << tree->key;
+//    LOG(INFO) << "HEIGHT: "<< tree->height;
 
     preorder(tree->left);
     preorder(tree->right);
@@ -105,7 +135,7 @@ TAVLNode* CAVLTree::search1(AVLTree x, Type key)
         search1(x->left, key);
     }
 }
-
+//查找最小值
 TAVLNode* CAVLTree::minimum(AVLTree tree)
 {
     if(NULL == tree)
@@ -120,7 +150,7 @@ TAVLNode* CAVLTree::minimum(AVLTree tree)
 
     return tree;
 }
-
+//查找最大值
 TAVLNode* CAVLTree::maximum(AVLTree tree)
 {
     if(NULL == tree)
@@ -214,11 +244,11 @@ TAVLNode* CAVLTree::insert(AVLTree tree, Type key)
 
         if(height(tree->left) - height(tree->right) == 2)
         {
-            if(key < tree->left->key)
+            if(key < tree->left->key) //左子节点的左子树
             {
                 tree = llRotation(tree);
             }
-            else
+            else //左子节点的右子树
             {
                 tree = lrRotation(tree);
             }
@@ -230,11 +260,11 @@ TAVLNode* CAVLTree::insert(AVLTree tree, Type key)
 
         if(height(tree->right) - height(tree->left) == 2)
         {
-            if(key > tree->right->key)
+            if(key > tree->right->key) //右子节点的右子树
             {
                 tree = rrRotation(tree);
             }
-            else
+            else //右子节点的左子树
             {
                 tree = rlRotation(tree);
             }
@@ -244,7 +274,7 @@ TAVLNode* CAVLTree::insert(AVLTree tree, Type key)
     {
         LOG(INFO) << "failed: there is exist the same node of the key!";
     }
-
+    //这句很重要
     tree->height = MAX(height(tree->left), height(tree->right)) + 1;
 
     return tree;
@@ -259,17 +289,52 @@ TAVLNode* CAVLTree::deleteNode(AVLTree tree, TAVLNode *node)
 
     if(node->key < tree->key)
     {
-
+        tree->left = deleteNode(tree->left, node);
+        if(height(tree->right) - height(tree->left) == 2)
+        {
+            if(height(tree->right->left) > height(tree->right->right))//右子节点左子树
+            {
+                tree = rlRotation(tree);
+            }
+            else
+            {
+                tree = rrRotation(tree);
+            }
+        }
     }
     else if(node->key > tree->key)
     {
-
+        tree->right = deleteNode(tree->right, node);
+        if(height(tree->left) - height(tree->right) == 2)
+        {
+            if(height(tree->left->left) > height(tree->left->right))
+            {
+                tree = llRotation(tree);
+            }
+            else
+            {
+                tree = lrRotation(tree);
+            }
+        }
     }
     else //tree是要删除的节点
     {
         if(tree->left && tree->right) //左右孩子都非空
         {
-
+            if(height(tree->left) > height(tree->right))
+            {
+                //这类似于用"tree的左子树中最大节点"做"tree"的替身；
+                //采用这种方式的好处是：删除"tree的左子树中最大节点"之后，AVL树仍然是平衡的
+                TAVLNode *max = maximum(tree->left);
+                tree->key = max->key;
+                tree->left = deleteNode(tree->left, max);
+            }
+            else
+            {
+                TAVLNode *min = minimum(tree->right);
+                tree->key = min->key;
+                tree->right = deleteNode(tree->right, min);
+            }
         }
         else
         {
@@ -277,6 +342,22 @@ TAVLNode* CAVLTree::deleteNode(AVLTree tree, TAVLNode *node)
             tree = n->left? n->left:n->right;
             free(n);
         }
+    }
+    //这一句很重要,一定要有判断，因为当tree左右都为空时，删除之后tree就为空了，再操作就会出现内存错误。
+    if(NULL != tree)
+    {
+        tree->height = MAX(height(tree->left), height(tree->right)) + 1;
+    }
+
+    return tree;
+}
+
+TAVLNode* CAVLTree::deleteKey(AVLTree tree, Type key)
+{
+    TAVLNode *node;
+    if((node = search(tree, key)) != NULL)
+    {
+        tree = deleteNode(tree, node);
     }
 
     return tree;
