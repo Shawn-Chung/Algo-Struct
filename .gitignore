@@ -1,3 +1,9 @@
 build-Algo-Struct-Desktop_Qt_5_7_0_MinGW_32bit-Debug/*
 Algo-Struct/Algo-Struct.pro.user
 *.o
+Algo-Struct/Makefile
+Algo-Struct/Makefile.Debug
+Algo-Struct/Makefile.Release
+Algo-Struct/debug/
+Algo-Struct/logs/
+
